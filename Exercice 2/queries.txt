@@ -1,0 +1,9 @@
+SELECT customer_entity.email, sales_order.grand_total, sales_order.created_at FROM sales_order JOIN store ON store.store_id= sales_order.store_id JOIN customers ON orders.customer_id = customer_entity.id WHERE store.store_name = 'LBC FR-FR' AND sales_order.status = 'processing' AND customers.created_at BETWEEN '2022-12-01 00:00:00' AND '2022-12-31 23:59:59' AND customer_entity.email LIKE 'odevelop%';
+
+
+SELECT customer_entity.email, sales_order.grand_total, sales_order.created_at FROM sales_order JOIN store ON store.store_id= sales_order.store_id JOIN customer_entity ON sales_order.customer_id = customer_entity.entity_id WHERE store.name = 'LBC FR-FR' AND sales_order.status = 'processing' AND customer_entity.created_at BETWEEN '2022-12-01 00:00:00' AND '2022-12-31 23:59:59' AND customer_entity.email LIKE 'odevelop%';
+
+
+SELECT DATE_FORMAT(customer_entity.created_at, '%Y-%m') AS customer_created_at, customer_entity.entity_id AS customer_id,customer_entity.email AS customer_email,DATE_FORMAT(sales_order.created_at, '%Y-%m') AS order_created_at,COUNT(sales_order.entity_id) AS total_orders,SUM(sales_order.grand_total) AS total_amount FROM customer_entity JOIN sales_order ON customer_entity.entity_id = sales_order.customer_id WHERE sales_order.store_id = 4 AND sales_order.status IN ('complete', 'processing', 'closed') GROUP BY customer_created_at,customer_id,customer_email,order_created_at ORDER BY order_created_at ASC | sed "s/'/\'/;s/\t/\",\"/g;s/^/\"/;s/$/\"/;s/\n//g" > customers_info.csv;
+
+mysql -u kdamaj -p ecommerce -e "SELECT * FROM store" > /home/kdamaj/files/customers_info.csv;
